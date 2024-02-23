@@ -1,0 +1,46 @@
+[
+    {
+        "device": "RUTX11",
+        "modem": "EG06",
+        "connection": ["ssh"],
+        "commands":
+        [
+            {"command": "ATI", "arguments": [], "expected_code": "OK", "max_response_time": 300},
+            {"command": "AT&V", "arguments": [], "expected_code": "OK", "max_response_time": 300},
+            {"command": "ATF", "arguments": [], "expected_code": "ERROR", "max_response_time": 300},
+            {"command": "AT+CSQ", "arguments": [], "expected_code": "OK", "max_response_time": 300},
+            {"command": "ATF", "arguments": [], "expected_code": "OK", "max_response_time": 300},
+            {"command": "AT+CMGS=\"+37063860953\"", "arguments": ["message text!"], "expected_code": "OK", "max_response_time": 3000}
+        ]
+    },
+    {
+        "device": "RUT955",
+        "modem": "EC25",
+        "connection": ["ssh", "serial"],
+        "commands":
+        [
+            {"command": "ATI", "arguments": [], "expected_code": "OK", "max_response_time": 300},
+            {"command": "AT&V", "arguments": [], "expected_code": "OK", "max_response_time": 300},
+            {"command": "ATF", "arguments": [], "expected_code": "ERROR", "max_response_time": 300},
+            {"command": "AT+CSQ", "arguments": [], "expected_code": "OK", "max_response_time": 300},
+            {"command": "ATF", "arguments": [], "expected_code": "OK", "max_response_time": 300},
+            {"command": "AT+CMGF=1", "arguments": [], "expected_code": "OK", "max_response_time": 300},
+            {"command": "AT+CMGS=\"+37063860953\"", "arguments": ["message text!"], "expected_code": "OK", "max_response_time": 3000}
+        ]
+    },
+    {
+        "device": "TRM240",
+        "modem": "EC21",
+        "connection": ["serial"],
+        "commands": 
+        [
+            {"command": "ATI", "arguments": [], "expected_code": "OK", "max_response_time": 300},
+            {"command": "AT&V", "arguments": [], "expected_code": "OK", "max_response_time": 300},
+            {"command": "ATF", "arguments": [], "expected_code": "ERROR", "max_response_time": 300},
+            {"command": "AT+CSQ", "arguments": [], "expected_code": "OK", "max_response_time": 300},
+            {"command": "ATF", "arguments": [], "expected_code": "OK", "max_response_time": 300},
+            {"command": "AT+CMGF=1", "arguments": [], "expected_code": "OK", "max_response_time": 300},
+            {"command": "AT+CMGS=\"+37063860953\"", "arguments": ["message text!", "endLine?!"], "expected_code": "OK", "max_response_time": 3000}
+        ]
+    }
+]
