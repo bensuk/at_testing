@@ -54,4 +54,4 @@ def parse_args():
         if not args.baud_rate:
             parser.error('Please specify baud rate for serial connection')
 
-    return args.connection, args.device, args.hostname, args.username, args.password, args.baud_rate
+    return args.connection, args.device.upper(), args.hostname, args.username, args.password, args.baud_rate

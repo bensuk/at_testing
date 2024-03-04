@@ -4,7 +4,7 @@ from modules import print_information, modem_manager
 
 def serial_modem(conf, device, baudrate, printer : print_information.PrintInformation):
     client = serial_client.SerialClient(device, baudrate)
-    session = connection.Connection(client)
+    session = connection.Connection(client, printer)
     
     reenable_ModemManager = modem_manager.check_and_configure(printer.print_on_current_line)
 

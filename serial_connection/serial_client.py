@@ -10,12 +10,14 @@ class SerialClient(client.Client):
     _read_timeout = 1
     _write_timeout = 1
 
-    def __init__(self, device, baudrate):
+    def __init__(self, device, baudrate, debug = False):
+        self._debug = debug
 
-        debug_path = pathlib.Path('debug/read_bytes.txt')
-        if not debug_path.parent.exists():
-            debug_path.parent.mkdir(mode=0o775)
-        self._log_file = open(debug_path, 'a')
+        if debug:
+            debug_path = pathlib.Path('debug/read_bytes.txt')
+            if not debug_path.parent.exists():
+                debug_path.parent.mkdir(mode=0o775)
+            self._log_file = open(debug_path, 'a')
 
         self._connect(device, baudrate)
         
@@ -23,7 +25,8 @@ class SerialClient(client.Client):
         if hasattr(self, '_serial'):
             self._serial.close()
 
-        self._log_file.close()
+        if self._debug:
+            self._log_file.close()
 
     def _connect(self, device, baudrate):
         self._serial = serial.Serial(
@@ -48,18 +51,20 @@ class SerialClient(client.Client):
     def read_line(self):
         results = self._serial.readline()
 
-        time = strftime('%H:%M:%S', localtime())
-        self._log_file.write(f'{time} | read_line:\n{results}\n')
-        self._log_file.write('\n')
+        if self._debug:
+            time = strftime('%H:%M:%S', localtime())
+            self._log_file.write(f'{time} | read_line:\n{results}\n')
+            self._log_file.write('\n')
 
         return results
     
     def read_bytes(self, size):
         results = self._serial.read(size)
 
-        time = strftime('%H:%M:%S', localtime())
-        self._log_file.write(f'{time} | read_bytes:\nsize: {size}\ndata: {results}\n')
-        self._log_file.write('\n')
+        if self._debug:
+            time = strftime('%H:%M:%S', localtime())
+            self._log_file.write(f'{time} | read_bytes:\nsize: {size}\ndata: {results}\n')
+            self._log_file.write('\n')
 
         return results
     
@@ -69,18 +74,20 @@ class SerialClient(client.Client):
 
         results = self._serial.read_until(value)
 
-        time = strftime('%H:%M:%S', localtime())
-        self._log_file.write(f'{time} | read_until:\nvalue: {value}\ndata: {results}\n')
-        self._log_file.write('\n')
+        if self._debug:
+            time = strftime('%H:%M:%S', localtime())
+            self._log_file.write(f'{time} | read_until:\nvalue: {value}\ndata: {results}\n')
+            self._log_file.write('\n')
 
         return results
     
     def read_all(self):
         results = self._serial.read_all()
 
-        time = strftime('%H:%M:%S', localtime())
-        self._log_file.write(f'{time} | read_all:\n{results}\n')
-        self._log_file.write('\n')
+        if self._debug:
+            time = strftime('%H:%M:%S', localtime())
+            self._log_file.write(f'{time} | read_all:\n{results}\n')
+            self._log_file.write('\n')
 
         return results
     
@@ -102,7 +109,6 @@ class SerialClientWithShell(SerialClient):
         self._username = username
         
     def __del__(self):
-        #TODO print logging out
         # logout
         if self._connected:
             self.send('exit')

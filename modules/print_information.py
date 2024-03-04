@@ -52,3 +52,8 @@ class PrintInformation:
     
     def get_lines(self):
         return self._lines
+    
+    def print_testing_start(self, device_name):
+        self.print_on_current_line(f'Testing {device_name} device')
+        self.print_new_line()
+        self.print_new_line()

@@ -4,7 +4,7 @@ from modules import gsmd, socat, validation, print_information
 
 def serial_console(conf, device, username, password, baudrate, device_name, printer : print_information.PrintInformation):
     client = serial_client.SerialClientWithShell(device, baudrate, username, password, printer.print_on_current_line)
-    shell = connection.ShellConnection(client, conf['modem_port'])
+    shell = connection.ShellConnection(client, printer, conf['modem_port'])
 
     validation.validate_device_name(shell, device_name)
     socat.check_and_configure_socat(shell, client, printer.print_on_current_line)

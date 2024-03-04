@@ -8,12 +8,13 @@ from client import client
 class SSHClient(client.Client):
     _timeout = 1
 
-    def __init__(self, hostname, username, password):
-
-        debug_path = pathlib.Path('debug/read_bytes.txt')
-        if not debug_path.parent.exists():
-            debug_path.parent.mkdir(mode=0o775)
-        self._log_file = open(debug_path, 'a')
+    def __init__(self, hostname, username, password, debug = False):
+        self._debug = debug
+        if debug:
+            debug_path = pathlib.Path('debug/read_bytes.txt')
+            if not debug_path.parent.exists():
+                debug_path.parent.mkdir(mode=0o775)
+            self._log_file = open(debug_path, 'a')
 
         self._connect(hostname, username, password)
         self._invoke_shell(username)
@@ -27,7 +28,8 @@ class SSHClient(client.Client):
         if hasattr(self, '_ssh_client'):
             self._ssh_client.close()
 
-        self._log_file.close()
+        if self._debug:
+            self._log_file.close()
 
     def _connect(self, hostname, username, password):
         self._ssh_client = paramiko.SSHClient()
@@ -62,19 +64,20 @@ class SSHClient(client.Client):
     def read_line(self):
         results = self._stdout.readline()
 
-        time = strftime('%H:%M:%S', localtime())
-        self._log_file.write(f'{time} | read_line:\n{results}\n')
-        self._log_file.write('\n')
+        if self._debug:
+            time = strftime('%H:%M:%S', localtime())
+            self._log_file.write(f'{time} | read_line:\n{results}\n')
+            self._log_file.write('\n')
 
         return results
 
     def read_bytes(self, size):
         results = self._stdout.read(size)
 
-        time = strftime('%H:%M:%S', localtime())
-        self._log_file.write(f'{time} | read_bytes:\nsize: {size}\ndata: {results}\n')
-        self._log_file.write('\n')
-
+        if self._debug:
+            time = strftime('%H:%M:%S', localtime())
+            self._log_file.write(f'{time} | read_bytes:\nsize: {size}\ndata: {results}\n')
+            self._log_file.write('\n')
 
         return results
     
@@ -85,15 +88,17 @@ class SSHClient(client.Client):
         data = b''
         read_size = len(value)
 
-        time = strftime('%H:%M:%S', localtime())
-        self._log_file.write(f'{time} | read_until:\nvalue: {value}\ndata: {data}\n')
-        self._log_file.write('\n')
+        if self._debug:
+            time = strftime('%H:%M:%S', localtime())
+            self._log_file.write(f'{time} | read_until:\nvalue: {value}\ndata: {data}\n')
+            self._log_file.write('\n')
 
         while True:
             data += self.read_bytes(read_size)
 
-            time = strftime('%H:%M:%S', localtime())
-            self._log_file.write(f'{time} | read_until:\nvalue: {value}\ndata: {data}\n')
+            if self._debug:
+                time = strftime('%H:%M:%S', localtime())
+                self._log_file.write(f'{time} | read_until:\nvalue: {value}\ndata: {data}\n')
 
             if data[-len(value):] == value:
                 return data
@@ -109,9 +114,10 @@ class SSHClient(client.Client):
         size = 1024
         results = self._channel.recv(size)
 
-        time = strftime('%H:%M:%S', localtime())
-        self._log_file.write(f'{time} | read_all:\n{results}\n')
-        self._log_file.write('\n')
+        if self._debug:
+            time = strftime('%H:%M:%S', localtime())
+            self._log_file.write(f'{time} | read_all:\n{results}\n')
+            self._log_file.write('\n')
 
         return results
     
