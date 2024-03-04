@@ -1,15 +1,19 @@
+import pathlib
 from time import sleep, localtime, strftime
 
 import paramiko
 
-import client
+from client import client
 
 class SSHClient(client.Client):
     _timeout = 1
 
     def __init__(self, hostname, username, password):
 
-        self._log_file = open('/home/studentas/python/AT/testing.txt', 'a')
+        debug_path = pathlib.Path('debug/read_bytes.txt')
+        if not debug_path.parent.exists():
+            debug_path.parent.mkdir(mode=0o775)
+        self._log_file = open(debug_path, 'a')
 
         self._connect(hostname, username, password)
         self._invoke_shell(username)
@@ -18,8 +22,8 @@ class SSHClient(client.Client):
     def __del__(self):
         if hasattr(self, '_stdout'):
             self._stdout.close()
-        if hasattr(self, '_channel'):
-            self._channel.close()
+        # if hasattr(self, '_channel'):
+        #     self._channel.close()
         if hasattr(self, '_ssh_client'):
             self._ssh_client.close()
 

@@ -1,19 +1,20 @@
 from time import sleep
 
-import client, at
+from client import client
+from modules import print_information, modem_commands
 
 #directly connected to AT
 class Connection:
     def __init__(self, client : client.Client):
         self._client = client
 
-    def send_at_command(self, command):
-        # print(f'Executing {command}...')
+    def send_at_command(self, command, printer : print_information.PrintInformation, print_warnings = True):
+        printer.print_on_current_line(f'Sending "{command["command"]}" command...')
 
-        if not at.validate_command(command['command']):
+        if not modem_commands.validate_command(command['command'], printer, print_warnings):
             return {'command': command["command"], 'result_code': 'validation_error', 'results': []}
         
-        if not at.send_command(self._client, command['command']):
+        if not modem_commands.send_command(self._client, command['command'], printer, print_warnings):
             return {'command': command["command"], 'result_code': 'send_error', 'results': []}
         
         if command['arguments']:
@@ -23,11 +24,12 @@ class Connection:
 
             for line in data:
                 if error in line:
-                    print(f'Command "{command["command"]}" produced ERROR, not sending any arguments')
+                    if print_warnings:
+                        printer.print_new_line(f'Command "{command["command"]}" produced ERROR, not sending any arguments\n\n')
                     return {'command': command["command"], 'result_code': line.strip().decode('utf-8'), 'results': []}
 
             for argument in command['arguments']:
-                if not at.send_command(self._client, argument):
+                if not modem_commands.send_command(self._client, argument, printer, print_warnings):
                     self._client.send('\x1a')
                     return {'command': command["command"], 'result_code': 'send_error', 'results': []}
                 
@@ -35,40 +37,50 @@ class Connection:
 
         self._client.change_timeout(command['max_response_time'])
 
-        code, results = at.get_results(self._client)
+        code, results = modem_commands.get_results(self._client, printer, print_warnings)
 
         self._client.restore_timeout()
 
         return {'command': command['command'], 'result_code': code, 'results': results}
 
-    def send_many_at_commands(self, commands):
+    def send_many_at_commands(self, commands, printer, print_warnings = True):
         results = []
         for command in commands:
-            results.append(self.send_at_command(command))
+            results.append(self.send_at_command(command, printer, print_warnings))
         else:
             return results
-        
-    def send_many_at_commands_multiprocessing(self, commands : list, results : list):
-        for command in commands:
-            results.append(self.send_at_command(command))
-            
-    def enable_echo(self):
+
+    def send_many_at_commands_callback(self, commands, printer : print_information.PrintInformation, process_result, print_warnings = True):
+        count = len(commands)
+
+        for i, command in enumerate(commands):
+            printer.print_on_current_line(f'Testing "{command["command"]}" command ({i+1} of {count}):\n')
+            results = self.send_at_command(command, printer, print_warnings)
+            process_result(results)
+
+    def enable_echo(self, printer, print_warnings = True):
+        printer('Enabling AT echoing...')
+
         self._client.send('ATE1')
-        code, results = at.get_results(self._client)
+        code, results = modem_commands.get_results(self._client, printer, print_warnings)
 
         if code != 'OK':
             raise(Exception('Could not enable echo mode'))
     
 #RUT and RUTX routers
 class ShellConnection(Connection):
-    _command = b'socat /dev/tty,raw,echo=0,escape=0x03 /dev/ttyUSB3,raw,setsid,sane,echo=0,nonblock ; stty sane\r'
-    
-    def __init__(self, client):
+    _default_modem_port = '/dev/ttyUSB3'
+
+    def __init__(self, client, modem_port=_default_modem_port):
         super().__init__(client)
+        self.set_modem_connection_command(modem_port)
 
     def send_shell_command(self, command):
         try:
             self._client.send(command)
+
+            connected_line = bytes(f'{self._client.get_username()}@', 'utf-8')
+            lines = self._client.read_until(connected_line).split(b'\n')
 
             echo_command = 'echo done'
             self._client.send(echo_command)
@@ -76,7 +88,7 @@ class ShellConnection(Connection):
             results = []
             add = False
             while True:
-                line = self._client.read_line()
+                line = lines.pop(0) if lines else self._client.read_line()
                 if line:
                     line = line.rstrip().decode('utf-8')
 
@@ -90,30 +102,36 @@ class ShellConnection(Connection):
                     raise(Exception('Error sending shell command'))
         except TimeoutError as err:
             raise(Exception('Error sending shell command (TimeoutError)'))
+        
+    def set_modem_connection_command(self, port):
+        self._command = bytes(f'socat /dev/tty,raw,echo=0,escape=0x03 {port},raw,setsid,sane,echo=0,nonblock ; stty sane\r', 'utf-8')
 
-    def send_at_command(self, command):
+    def send_at_command(self, command, printer, print_warnings = True):
         self.connect_to_modem()
-        result = super().send_at_command(command)
+        result = super().send_at_command(command, printer, print_warnings)
         self.disconnet_from_modem()
         
         return result
     
-    def send_many_at_commands(self, commands):    
+    def send_many_at_commands(self, commands, printer, print_warnings = True):    
         self.connect_to_modem()
 
         results = []
         for command in commands:
-            results.append(super().send_at_command(command))
+            results.append(super().send_at_command(command, printer, print_warnings))
         else:
             self.disconnet_from_modem()
             return results
-        
-    def send_many_at_commands_multiprocessing(self, commands : list, results : list):
-        self.connect_to_modem()
 
-        for command in commands:
-            results.append(super().send_at_command(command))
-        
+    def send_many_at_commands_callback(self, commands, printer : print_information.PrintInformation, process_result, print_warnings = True):
+        self.connect_to_modem()
+        count = len(commands)
+
+        for i, command in enumerate(commands):
+            printer.print_on_current_line(f'Testing "{command["command"]}" command ({i+1} of {count}):\n')
+            results = super().send_at_command(command, printer, print_warnings)
+            process_result(results)
+
         self.disconnet_from_modem()
     
     def connect_to_modem(self):
@@ -136,7 +154,6 @@ class ShellConnection(Connection):
                 append = current_line[-3:] == b'\r\r\n'
 
                 if self._command.strip() in line:
-                    # print('ready to send AT commands')
                     return
         except TimeoutError as err:
             raise Exception('Could not connect to modem, cannot send AT commands (TimeoutError)')
@@ -155,7 +172,7 @@ class ShellConnection(Connection):
         except TimeoutError as err:
             raise Exception('Could not disconnect from modem (TimeoutError)')
     
-    def enable_echo(self):
+    def enable_echo(self, printer, print_warnings = True):
         self.connect_to_modem()
-        super().enable_echo()
+        super().enable_echo(printer, print_warnings)
         self.disconnet_from_modem()

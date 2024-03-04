@@ -1,8 +1,10 @@
 from time import sleep, localtime, strftime
+import pathlib
 
 import serial
 
-import client
+from client import client
+from modules import print_information
 
 class SerialClient(client.Client):
     _read_timeout = 1
@@ -10,9 +12,12 @@ class SerialClient(client.Client):
 
     def __init__(self, device, baudrate):
 
-        self._log_file = open('/home/studentas/python/AT/testing.txt', 'a')
+        debug_path = pathlib.Path('debug/read_bytes.txt')
+        if not debug_path.parent.exists():
+            debug_path.parent.mkdir(mode=0o775)
+        self._log_file = open(debug_path, 'a')
 
-        self._connect(device, baudrate)        
+        self._connect(device, baudrate)
         
     def __del__(self):
         if hasattr(self, '_serial'):
@@ -91,18 +96,19 @@ class SerialClient(client.Client):
 class SerialClientWithShell(SerialClient):
     _connected = False
 
-    def __init__(self, device, baudrate, username, password):
+    def __init__(self, device, baudrate, username, password, printer):
         super().__init__(device, baudrate)
-        self._invoke_shell(username, password)
+        self._invoke_shell(username, password, printer)
         self._username = username
         
     def __del__(self):
+        #TODO print logging out
         # logout
         if self._connected:
             self.send('exit')
         super().__del__()
 
-    def _invoke_shell(self, username, password):
+    def _invoke_shell(self, username, password, printer):
         login_input = b'login: '
         password_input = b'Password: '
         connected_line = bytes(username + '@', 'utf-8')
@@ -110,15 +116,14 @@ class SerialClientWithShell(SerialClient):
         self.send('')
         self.read_line()
         line = self.read_bytes(len(connected_line if len(connected_line) < len(login_input) else login_input))
+        printer('Logging in...')
         
         while True:
             if line.endswith(connected_line):
-                print('Already logged in as', username)
+                printer(f'Already logged in as {username}')
                 self._connected = True
                 return
             elif line.endswith(login_input):
-                print('Logging in...')
-
                 self.send(username)
                 line = self.read_until(password_input)
 
@@ -127,7 +132,7 @@ class SerialClientWithShell(SerialClient):
                     line = self.read_until(connected_line)
 
                     if line.endswith(connected_line):
-                        print('Successfully connected!')
+                        printer('Successfully connected!')
                         self._connected = True
                         return
                 raise Exception('Could not login: incorrect password or username')
@@ -136,7 +141,7 @@ class SerialClientWithShell(SerialClient):
                 line = self.read_until(connected_line)
 
                 if line.endswith(connected_line):
-                    print('Successfully connected!')
+                    printer('Successfully connected!')
                     self._connected = True
                     return
                 raise Exception('Could not login: incorrect password or username')

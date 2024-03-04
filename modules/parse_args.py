@@ -1,7 +1,5 @@
 import argparse
 
-from modules import validation
-
 def parse_args():
     parser = argparse.ArgumentParser(description="Test the device's modem with AT commands using commands from the given configuration file.")
 
@@ -39,10 +37,21 @@ def parse_args():
         help="The password for logging in to the device. Not required if device is TRM series"
     )
 
+    parser.add_argument(
+        "-rate",
+        "--baud-rate",
+        help="Baud rate for serial connection"
+    )
+
     args = parser.parse_args()
 
     if args.device[:3].upper() != 'TRM':
         if not args.username or not args.password:
             parser.error('Username and password parameters are required if the device is not a TRM series.')
 
-    return args.connection, args.device, args.hostname, args.username, args.password
+    #baud rate required if connection is serial
+    if args.connection == 'serial':
+        if not args.baud_rate:
+            parser.error('Please specify baud rate for serial connection')
+
+    return args.connection, args.device, args.hostname, args.username, args.password, args.baud_rate

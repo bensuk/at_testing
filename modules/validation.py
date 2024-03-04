@@ -1,13 +1,13 @@
-import connection
+import device_connection.connection as connection
 
-def validate_connection_type(configuration, connection_type):
+def validate_connection_type(configuration_connection, connection_type, device_name):
     connection_type = connection_type.lower()
 
-    for connection in configuration['connection']:
+    for connection in configuration_connection:
         if connection.lower() == connection_type:
-            return True
+            return
     else:
-        raise Exception(f'Given {connection_type} is not valid for this device. {configuration["device"]} device supports {configuration["connection"]} connections')
+        raise Exception(f'Given {connection_type} is not valid for this device. {device_name} device supports {configuration_connection} connections')
     
 def validate_device_name(shell : connection.ShellConnection, device_name):
     command = 'uci show system.system.device_code'
@@ -19,16 +19,13 @@ def validate_device_name(shell : connection.ShellConnection, device_name):
     except IndexError as err:
         raise Exception('Could not get device name from device itself')
     
-def validate_modem(shell : connection.ShellConnection, modem_name):
+def validate_modem(shell : connection.Connection, modem_name, printer):
     command = {"command": "AT+GMM", "arguments": [], "expected_code": "OK", "max_response_time": 300}
-    results = shell.send_at_command(command)['results']
+    results = shell.send_at_command(command, printer)
 
-    if results:
-        if results[0].upper() == modem_name.upper():
+    if results['result_code'] == 'OK' and results['results']:
+        if results['results'][0].upper() == modem_name.upper():
             return True
-    raise Exception('Device modem does not match the modem in the configuration')
-
-def validate_file_extension(file, extension):
-    if file.lower().endswith(extension.lower()):
-        return True
-    return False
+        else:
+            raise Exception('Device modem does not match the modem in the configuration')
+    raise Exception('Could not get modem information')
