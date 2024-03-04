@@ -151,3 +151,6 @@ Example without login information:
 ```bash
 sudo -E python3 main.py -c serial -dev trm240 -host /dev/ttyUSB3 -rate 115200
 ```
+
+## Output of the running application
+![](https://github.com/bensuk/at_testing/blob/main/output.gif?raw=true)
