@@ -3,7 +3,9 @@ from time import localtime, strftime
 import pathlib
 
 def create_csv_file(device_name, modem_manufacturer, modem_model):
-    file_name = device_name.upper() + '_' + strftime('%Y-%m-%d %H:%M:%S', localtime()) + '.csv'
+    # file_name = device_name.upper() + '_' + strftime('%Y-%m-%d %H:%M:%S', localtime()) + '.csv'
+    #windows
+    file_name = device_name.upper() + '_' + strftime('%Y-%m-%d %Hh%Mm%Ss', localtime()) + '.csv'
     path = pathlib.Path(f'report/reports/{file_name}')
 
     if not path.parent.exists():

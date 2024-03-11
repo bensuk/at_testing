@@ -2,6 +2,8 @@ import modules.print_information as print_information
 
 import client.client as client
 
+from time import sleep
+
 def validate_command(command : str, printer : print_information.PrintInformation, print_warnings):
     if command[:2].upper() != 'AT':
         if command == '+++' or command.upper() == 'A/':

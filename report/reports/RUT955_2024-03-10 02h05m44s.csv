@@ -1,0 +1,11 @@
+manufacturer,AT+GMI
+model,EC25
+
+command,expected_code,result_code,passed
+ATI,OK,OK,True
+AT&V,OK,OK,True
+ATF,ERROR,ERROR,True
+AT+CSQ,OK,OK,True
+ATF,OK,ERROR,False
+AT+CMGF=1,OK,ERROR,False
+"AT+CMGS=""phone_number""",OK,ERROR,False

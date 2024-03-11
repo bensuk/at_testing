@@ -3,7 +3,7 @@ from ssh_connection import ssh_client
 from modules import gsmd, socat, validation, print_information
 
 def ssh(conf, hostname, username, password, baud_rate, device_name, printer : print_information.PrintInformation):
-    client = ssh_client.SSHClient(hostname, username, password)
+    client = ssh_client.SSHClient(hostname, username, password, debug=True, device_name=device_name)
     shell = connection.ShellConnection(client, printer, conf['modem_port'])
 
     validation.validate_device_name(shell, device_name)

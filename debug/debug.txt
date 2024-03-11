@@ -1,0 +1,165 @@
+17:34:30 | read_until_regex |
+	value: b'^root@RUT955:.+# $'
+	data: [b'']
+
+17:34:30 | read_until_regex |
+	value: b'^root@RUT955:.+# $'
+	data: [b'']
+
+17:34:30 | read_until_regex |
+	value: b'^root@RUT955:.+# $'
+	data: [b'BusyBox v1.34.1 (2024-01-12 11:31:11 UTC) built-in shell (ash)', b'']
+
+17:34:30 | read_until_regex |
+	value: b'^root@RUT955:.+# $'
+	data: [b'BusyBox v1.34.1 (2024-01-12 11:31:11 UTC) built-in shell (ash)', b'    ____        _    ___  ____', b'']
+
+17:34:30 | read_until_regex |
+	value: b'^root@RUT955:.+# $'
+	data: [b'BusyBox v1.34.1 (2024-01-12 11:31:11 UTC) built-in shell (ash)', b'    ____        _    ___  ____', b'   |  _ \\ _   _| |_ / _ \\/ ___|', b'']
+
+17:34:30 | read_until_regex |
+	value: b'^root@RUT955:.+# $'
+	data: [b'BusyBox v1.34.1 (2024-01-12 11:31:11 UTC) built-in shell (ash)', b'    ____        _    ___  ____', b'   |  _ \\ _   _| |_ / _ \\/ ___|', b'   | |_) | | | | __| | | \\___ \\', b'']
+
+17:34:30 | read_until_regex |
+	value: b'^root@RUT955:.+# $'
+	data: [b'BusyBox v1.34.1 (2024-01-12 11:31:11 UTC) built-in shell (ash)', b'    ____        _    ___  ____', b'   |  _ \\ _   _| |_ / _ \\/ ___|', b'   | |_) | | | | __| | | \\___ \\', b'   |  _ <| |_| | |_| |_| |___) |', b'']
+
+17:34:30 | read_until_regex |
+	value: b'^root@RUT955:.+# $'
+	data: [b'BusyBox v1.34.1 (2024-01-12 11:31:11 UTC) built-in shell (ash)', b'    ____        _    ___  ____', b'   |  _ \\ _   _| |_ / _ \\/ ___|', b'   | |_) | | | | __| | | \\___ \\', b'   |  _ <| |_| | |_| |_| |___) |', b'   |_| \\_\\\\__,_|\\__|\\___/|____/', b'']
+
+17:34:30 | read_until_regex |
+	value: b'^root@RUT955:.+# $'
+	data: [b'BusyBox v1.34.1 (2024-01-12 11:31:11 UTC) built-in shell (ash)', b'    ____        _    ___  ____', b'   |  _ \\ _   _| |_ / _ \\/ ___|', b'   | |_) | | | | __| | | \\___ \\', b'   |  _ <| |_| | |_| |_| |___) |', b'   |_| \\_\\\\__,_|\\__|\\___/|____/', b'-----------------------------------', b'']
+
+17:34:30 | read_until_regex |
+	value: b'^root@RUT955:.+# $'
+	data: [b'BusyBox v1.34.1 (2024-01-12 11:31:11 UTC) built-in shell (ash)', b'    ____        _    ___  ____', b'   |  _ \\ _   _| |_ / _ \\/ ___|', b'   | |_) | | | | __| | | \\___ \\', b'   |  _ <| |_| | |_| |_| |___) |', b'   |_| \\_\\\\__,_|\\__|\\___/|____/', b'-----------------------------------', b'     Teltonika RUT9 series 2024', b'-----------------------------------', b'   Device:     RUT955', b'   Kernel:     5.4.259', b'   Firmware:   RUT9_R_00.07.06.3', b'   Build:      9b07149879', b'   Build date: 2024-01-12 17:01:34', b'']
+
+17:34:30 | read_until_regex |
+	value: b'^root@RUT955:.+# $'
+	data: [b'BusyBox v1.34.1 (2024-01-12 11:31:11 UTC) built-in shell (ash)', b'    ____        _    ___  ____', b'   |  _ \\ _   _| |_ / _ \\/ ___|', b'   | |_) | | | | __| | | \\___ \\', b'   |  _ <| |_| | |_| |_| |___) |', b'   |_| \\_\\\\__,_|\\__|\\___/|____/', b'-----------------------------------', b'     Teltonika RUT9 series 2024', b'-----------------------------------', b'   Device:     RUT955', b'   Kernel:     5.4.259', b'   Firmware:   RUT9_R_00.07.06.3', b'   Build:      9b07149879', b'   Build date: 2024-01-12 17:01:34', b'-----------------------------------', b'']
+
+17:34:30 | send |
+	b'socat /dev/tty,raw,echo=0,escape=0x03 /dev/ttyUSB4,raw,setsid,sane,echo=0,nonblock ; stty sane\r'
+
+17:34:30 | read_until |
+	value: b'socat /dev/tty,raw,echo=0,escape=0x03 /dev/ttyUSB4,raw,setsid,sane,echo=0,nonblock ; stty sane'
+	data: []
+
+17:38:41 | read_until_regex |
+	value: b'^root@RUT955:.+# $'
+	data: [b'']
+
+17:38:41 | read_until_regex |
+	value: b'^root@RUT955:.+# $'
+	data: [b'']
+
+17:38:41 | read_until_regex |
+	value: b'^root@RUT955:.+# $'
+	data: [b'BusyBox v1.34.1 (2024-01-12 11:31:11 UTC) built-in shell (ash)', b'']
+
+17:38:42 | read_until_regex |
+	value: b'^root@RUT955:.+# $'
+	data: [b'BusyBox v1.34.1 (2024-01-12 11:31:11 UTC) built-in shell (ash)', b'    ____        _    ___  ____', b'']
+
+17:38:42 | read_until_regex |
+	value: b'^root@RUT955:.+# $'
+	data: [b'BusyBox v1.34.1 (2024-01-12 11:31:11 UTC) built-in shell (ash)', b'    ____        _    ___  ____', b'   |  _ \\ _   _| |_ / _ \\/ ___|', b'']
+
+17:38:42 | read_until_regex |
+	value: b'^root@RUT955:.+# $'
+	data: [b'BusyBox v1.34.1 (2024-01-12 11:31:11 UTC) built-in shell (ash)', b'    ____        _    ___  ____', b'   |  _ \\ _   _| |_ / _ \\/ ___|', b'   | |_) | | | | __| | | \\___ \\', b'']
+
+17:38:42 | read_until_regex |
+	value: b'^root@RUT955:.+# $'
+	data: [b'BusyBox v1.34.1 (2024-01-12 11:31:11 UTC) built-in shell (ash)', b'    ____        _    ___  ____', b'   |  _ \\ _   _| |_ / _ \\/ ___|', b'   | |_) | | | | __| | | \\___ \\', b'   |  _ <| |_| | |_| |_| |___) |', b'']
+
+17:38:42 | read_until_regex |
+	value: b'^root@RUT955:.+# $'
+	data: [b'BusyBox v1.34.1 (2024-01-12 11:31:11 UTC) built-in shell (ash)', b'    ____        _    ___  ____', b'   |  _ \\ _   _| |_ / _ \\/ ___|', b'   | |_) | | | | __| | | \\___ \\', b'   |  _ <| |_| | |_| |_| |___) |', b'   |_| \\_\\\\__,_|\\__|\\___/|____/', b'']
+
+17:38:42 | read_until_regex |
+	value: b'^root@RUT955:.+# $'
+	data: [b'BusyBox v1.34.1 (2024-01-12 11:31:11 UTC) built-in shell (ash)', b'    ____        _    ___  ____', b'   |  _ \\ _   _| |_ / _ \\/ ___|', b'   | |_) | | | | __| | | \\___ \\', b'   |  _ <| |_| | |_| |_| |___) |', b'   |_| \\_\\\\__,_|\\__|\\___/|____/', b'-----------------------------------', b'']
+
+17:38:42 | read_until_regex |
+	value: b'^root@RUT955:.+# $'
+	data: [b'BusyBox v1.34.1 (2024-01-12 11:31:11 UTC) built-in shell (ash)', b'    ____        _    ___  ____', b'   |  _ \\ _   _| |_ / _ \\/ ___|', b'   | |_) | | | | __| | | \\___ \\', b'   |  _ <| |_| | |_| |_| |___) |', b'   |_| \\_\\\\__,_|\\__|\\___/|____/', b'-----------------------------------', b'     Teltonika RUT9 series 2024', b'-----------------------------------', b'   Device:     RUT955', b'   Kernel:     5.4.259', b'']
+
+17:38:42 | read_until_regex |
+	value: b'^root@RUT955:.+# $'
+	data: [b'BusyBox v1.34.1 (2024-01-12 11:31:11 UTC) built-in shell (ash)', b'    ____        _    ___  ____', b'   |  _ \\ _   _| |_ / _ \\/ ___|', b'   | |_) | | | | __| | | \\___ \\', b'   |  _ <| |_| | |_| |_| |___) |', b'   |_| \\_\\\\__,_|\\__|\\___/|____/', b'-----------------------------------', b'     Teltonika RUT9 series 2024', b'-----------------------------------', b'   Device:     RUT955', b'   Kernel:     5.4.259', b'   Firmware:   RUT9_R_00.07.06.3', b'   Build:      9b07149879', b'   Build date: 2024-01-12 17:01:34', b'-----------------------------------', b'']
+
+17:38:42 | send |
+	b'socat /dev/tty,raw,echo=0,escape=0x03 /dev/ttyUSB4,raw,setsid,sane,echo=0,nonblock ; stty sane\r'
+
+17:38:42 | read_until |
+	value: b'socat /dev/tty,raw,echo=0,escape=0x03 /dev/ttyUSB4,raw,setsid,sane,echo=0,nonblock ; stty sane'
+	data: [b'']
+
+17:38:42 | read_until |
+	value: b'socat /dev/tty,raw,echo=0,escape=0x03 /dev/ttyUSB4,raw,setsid,sane,echo=0,nonblock ; stty sane'
+	data: [b's']
+
+17:38:42 | read_until |
+	value: b'socat /dev/tty,raw,echo=0,escape=0x03 /dev/ttyUSB4,raw,setsid,sane,echo=0,nonblock ; stty sane'
+	data: [b'so']
+
+17:38:42 | read_until |
+	value: b'socat /dev/tty,raw,echo=0,escape=0x03 /dev/ttyUSB4,raw,setsid,sane,echo=0,nonblock ; stty sane'
+	data: [b'soc']
+
+17:38:42 | read_until |
+	value: b'socat /dev/tty,raw,echo=0,escape=0x03 /dev/ttyUSB4,raw,setsid,sane,echo=0,nonblock ; stty sane'
+	data: [b'soca']
+
+17:38:42 | read_until |
+	value: b'socat /dev/tty,raw,echo=0,escape=0x03 /dev/ttyUSB4,raw,setsid,sane,echo=0,nonblock ; stty sane'
+	data: [b'socat']
+
+17:38:42 | read_until |
+	value: b'socat /dev/tty,raw,echo=0,escape=0x03 /dev/ttyUSB4,raw,setsid,sane,echo=0,nonblock ; stty sane'
+	data: [b'socat /dev/tt']
+
+17:38:42 | read_until |
+	value: b'socat /dev/tty,raw,echo=0,escape=0x03 /dev/ttyUSB4,raw,setsid,sane,echo=0,nonblock ; stty sane'
+	data: [b'socat /dev/tty,raw,echo=0,escap']
+
+17:38:42 | read_until |
+	value: b'socat /dev/tty,raw,echo=0,escape=0x03 /dev/ttyUSB4,raw,setsid,sane,echo=0,nonblock ; stty sane'
+	data: [b'socat /dev/tty,raw,echo=0,escape=0x03 /dev/t']
+
+17:38:42 | read_until |
+	value: b'socat /dev/tty,raw,echo=0,escape=0x03 /dev/ttyUSB4,raw,setsid,sane,echo=0,nonblock ; stty sane'
+	data: [b'socat /dev/tty,raw,echo=0,escape=0x03 /dev/ttyUSB4,raw,setsid,s']
+
+17:38:42 | read_until |
+	value: b'socat /dev/tty,raw,echo=0,escape=0x03 /dev/ttyUSB4,raw,setsid,sane,echo=0,nonblock ; stty sane'
+	data: [b'socat /dev/tty,raw,echo=0,escape=0x03 /dev/ttyUSB4,raw,setsid,sane,echo=0,n']
+
+17:38:42 | read_until |
+	value: b'socat /dev/tty,raw,echo=0,escape=0x03 /dev/ttyUSB4,raw,setsid,sane,echo=0,nonblock ; stty sane'
+	data: [b'socat /dev/tty,raw,echo=0,escape=0x03 /dev/ttyUSB4,raw,setsid,sane,echo=0,nonblock ; stty s']
+
+17:38:42 | send |
+	b'AT\r'
+
+17:38:42 | read_until |
+	value: b'OK'
+	data: [b'']
+
+17:38:42 | read_until |
+	value: b'OK'
+	data: [b'AT', b'']
+
+17:38:42 | read_until |
+	value: b'OK'
+	data: [b'AT', b'']
+
+17:38:42 | read_until |
+	value: b'OK'
+	data: [b'AT', b'']
+

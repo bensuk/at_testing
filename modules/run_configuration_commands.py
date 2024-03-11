@@ -29,8 +29,8 @@ class RunConfigurationCommands:
         self._print_header()
         self._client.send_many_at_commands_callback(self._dev_conf['commands'], self.process_result, False)
 
-        self.send_report_to_ftp_server()
-        self.send_email_notification()
+        # self.send_report_to_ftp_server()
+        # self.send_email_notification()
 
     def process_result(self, result):
         for command in self._commands:

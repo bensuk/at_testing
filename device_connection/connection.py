@@ -1,18 +1,22 @@
 from time import sleep
 
-from client import client
-from modules import print_information, modem_commands
+from client.client import Client
+from modules.print_information import PrintInformation
+from modules import modem_commands
 
 #directly connected to AT
 class Connection:
-    def __init__(self, client : client.Client, printer : print_information.PrintInformation):
+    def __init__(self, client : Client, printer : PrintInformation):
         self._client = client
         self._printer = printer
+
+        #TODO what about echo?
         self.enable_echo()
 
     def send_at_command(self, command, print_warnings = True):
         self._printer.print_on_current_line(f'Sending "{command["command"]}" command...')
-
+        #TODO PATESUOTI ISKART REQUESTINANT DATA KAIP ATRODO KAI DAR NESPEJA MODEMAS RETURNINT RESULTS!
+        #TODO gal pradzioje uzdeti sleep, paskui readall ir tik tada tikrinti?
         if not modem_commands.validate_command(command['command'], self._printer, print_warnings):
             return {'command': command["command"], 'result_code': 'validation_error', 'results': []}
         
@@ -63,7 +67,7 @@ class Connection:
     def enable_echo(self, print_warnings = True):
         self._printer.print_on_current_line('Enabling AT echoing...')
         
-        self._client.send('ATE1')
+            
         code, results = modem_commands.get_results(self._client, self._printer, print_warnings)
 
         if code != 'OK':
@@ -78,7 +82,7 @@ class Connection:
 class ShellConnection(Connection):
     _default_modem_port = '/dev/ttyUSB3'
 
-    def __init__(self, client, printer : print_information.PrintInformation, modem_port=_default_modem_port):
+    def __init__(self, client, printer : PrintInformation, modem_port=_default_modem_port):
         self.set_modem_connection_command(modem_port)
         super().__init__(client, printer)
 
@@ -111,7 +115,7 @@ class ShellConnection(Connection):
             raise(Exception('Error sending shell command (TimeoutError)'))
         
     def set_modem_connection_command(self, port):
-        self._command = bytes(f'socat /dev/tty,raw,echo=0,escape=0x03 {port},raw,setsid,sane,echo=0,nonblock ; stty sane\r', 'utf-8')
+        self._command = bytes(f'socat /dev/tty,raw,echo=0,escape=0x03 {port},raw,setsid,sane,echo=0,nonblock ; stty sane', 'utf-8')
 
     def send_at_command(self, command, print_warnings = True):
         self.connect_to_modem()
@@ -141,27 +145,23 @@ class ShellConnection(Connection):
 
         self.disconnet_from_modem()
     
+    #TODO turetu serial irgi raisint timeouterror exception
     def connect_to_modem(self):
         try:
             self._client.send(self._command)
 
-            line = b''
-            append = False
             while True:
-                current_line = self._client.read_line()
+                data = self._client.read_until(self._command)
+                if self._command in data:
+                    break
+            
+            # TODO turetu buti modem active
+            self._client.send('AT')
+            data = self._client.read_until('OK')
 
-                if not current_line:
-                    raise Exception('Could not connect to modem, cannot send AT commands')
+            print(data)
+            exit()
 
-                if append:
-                    line += current_line.strip()
-                else:
-                    line = current_line.strip()
-
-                append = current_line[-3:] == b'\r\r\n'
-
-                if self._command.strip() in line:
-                    return
         except TimeoutError as err:
             raise Exception('Could not connect to modem, cannot send AT commands (TimeoutError)')
     
